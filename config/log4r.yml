@@ -1,0 +1,11 @@
+loggers:
+  - name : default
+    level : INFO
+    outputters:
+      - stdout
+outputters:
+  - type : StdoutOutputter
+    name : stdout
+    formatter:
+      pattern : "%l %m"
+      type : PatternFormatter

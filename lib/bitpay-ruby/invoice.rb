@@ -27,6 +27,7 @@ module BitPayRuby
         "price" => price,
         "currency" => currency
       }
+
       update! response.body
       self
     end

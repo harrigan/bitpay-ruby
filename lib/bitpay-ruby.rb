@@ -4,18 +4,25 @@ require "yaml"
 require "faraday"
 
 module BitPayRuby
-  class << self
-    attr_accessor :config, :connection
+  class BitPayRubyError < StandardError
   end
 
-  class BitPayRubyError < StandardError
+  class << self
+    attr_accessor :config
+
+    @@connection = nil
+
+    def connection
+      if @@connection.nil?
+        @@connection = Faraday.new :url => config["api_endpoint"]
+        @@connection.basic_auth config["api_key"], ""
+      end
+      @@connection
+    end
   end
 end
 
 BitPayRuby::config = YAML.load_file(File.dirname(__FILE__) + "/../config/bitpay-ruby.yml")
-
-BitPayRuby::connection = Faraday.new :url => BitPayRuby::config["api_endpoint"]
-BitPayRuby::connection.basic_auth BitPayRuby::config["api_key"], ""
 
 require File.join File.dirname(__FILE__), "bitpay-ruby", "version"
 require File.join File.dirname(__FILE__), "bitpay-ruby", "logging"

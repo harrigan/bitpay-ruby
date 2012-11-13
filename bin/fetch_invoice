@@ -4,7 +4,6 @@ require "bundler"
 Bundler.require :default
 
 require File.dirname(__FILE__) + "/../lib/bitpay-ruby"
-include BitPayRuby
 
 require "optparse"
 
@@ -12,19 +11,15 @@ begin
   options = {}
   optparse = OptionParser.new do |opts|
     opts.banner = "Usage: #{$0} [options]"
-    # create an invoice
-    opts.on("-c", "--create PRICE CURRENCY", "Create an invoice.") do |price, currency|
-      i = Invoice.new(price.to_f, currency)
-      i.create
-      $stdout.puts i.to_s
-      exit
+
+    # specify an API key
+    opts.on("-a", "--api-key API_KEY", "Specify an API key.") do |api_key|
+      options[:api_key] = api_key
     end
 
-    # fetch an invoice status
-    opts.on("-f", "--fetch ID", "Fetch an invoice status.") do |id|
-      i = Invoice.fetch(id)
-      $stdout.puts i.to_s
-      exit
+    # specify an id
+    opts.on("-i", "--id ID", "Specify an id.") do |id|
+      options[:id] = id
     end
 
     # version
@@ -39,8 +34,13 @@ begin
       exit
     end
   end
+
   optparse.parse!
-rescue BitPayRubyError => e
+  
+  BitPayRuby::config["api_key"] = options[:api_key]
+  invoice = BitPayRuby::Invoice.fetch(options[:id])
+  $stdout.puts invoice.to_s
+rescue BitPayRuby::BitPayRubyError => e
   $stderr.puts e.message
   exit e.status_code
 rescue Interrupt => e

@@ -24,12 +24,6 @@ begin
       options[:id] = id
     end
 
-    # version
-    opts.on("-v", "--version", "Show the version number.") do
-      $stdout.puts "0.1.0"
-      exit
-    end
-
     # help
     opts.on("-h", "--help", "Show this help message.") do
       $stdout.puts opts
@@ -38,6 +32,9 @@ begin
   end
 
   optparse.parse!
+  
+  raise OptionParser::MissingArgument if options[:api_key].nil?
+  raise OptionParser::MissingArgument if options[:id].nil?
   
   BitPayRuby::config["api_key"] = options[:api_key]
   invoice = BitPayRuby::Invoice.fetch(options[:id])

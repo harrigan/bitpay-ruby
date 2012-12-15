@@ -18,15 +18,8 @@ begin
     opts.on("-a", "--api-key API_KEY", "Specify an API key.") do |api_key|
       options[:api_key] = api_key
     end
-
-    # specfy a price
-    opts.on("-p", "--price PRICE", "Specify a price.") do |price|
-      options[:price] = price.to_f
-    end
-
-    # specify a currency
-    opts.on("-c", "--currency CURRENCY", "Specify a currency.") do |currency|
-      options[:currency] = currency
+    opts.on("-r", "--receive", "Receive invoice status updates.") do
+    exit
     end
 
     # version
@@ -43,11 +36,29 @@ begin
   end
 
   optparse.parse!
-  
-  BitPayRuby::config["api_key"] = options[:api_key]
-  invoice = BitPayRuby::Invoice.new(options[:price], options[:currency])
-  invoice.create
-  $stdout.puts invoice.to_s
+
+  require "sinatra"
+  require "webrick/https"
+
+  class App < Sinatra::Base
+    post "/" do
+      params.to_json
+    end
+  end
+
+  webrick_options = {
+    :server => "webrick",
+    :Port => 8443,
+    :SSLEnable => true,
+    :SSLVerifyClient => OpenSSL::SSL::VERIFY_NONE,
+    :SSLCertificate => OpenSSL::X509::Certificate.new(File.open("./config/ssl-cert.pem").read),
+    :SSLPrivateKey => OpenSSL::PKey::RSA.new(File.open("./config/ssl-key.pem").read),
+    :SSLCertName => [ [ "CN",WEBrick::Utils::getservername ] ],
+    :app => App
+  }
+
+  Rack::Server.start webrick_options
+  exit
 rescue BitPayRuby::BitPayRubyError => e
   $stderr.puts e.message
   exit e.status_code

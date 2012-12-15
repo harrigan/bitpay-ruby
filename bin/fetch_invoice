@@ -5,6 +5,8 @@ Bundler.require :default
 
 require File.dirname(__FILE__) + "/../lib/bitpay-ruby"
 
+BitPayRuby::config = YAML.load_file(File.dirname(__FILE__) + "/../config/bitpay-ruby.yml")
+
 require "optparse"
 
 begin

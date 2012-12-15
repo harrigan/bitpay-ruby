@@ -22,8 +22,6 @@ module BitPayRuby
   end
 end
 
-BitPayRuby::config = YAML.load_file(File.dirname(__FILE__) + "/../config/bitpay-ruby.yml")
-
 require File.join File.dirname(__FILE__), "bitpay-ruby", "version"
 require File.join File.dirname(__FILE__), "bitpay-ruby", "logging"
 

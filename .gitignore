@@ -1,6 +1,4 @@
 .bundle
-.yardoc
-db/*.db
 pkg/*
 tmp/*
 *.gem

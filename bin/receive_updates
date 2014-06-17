@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-require "bundler"
-Bundler.require :default
-
 require File.dirname(__FILE__) + "/../lib/bitpay-ruby"
 
 BitPayRuby::config = YAML.load_file(File.dirname(__FILE__) + "/../config/bitpay-ruby.yml")
@@ -16,7 +13,7 @@ begin
 
     # specify an API key
     opts.on("-a", "--api-key API_KEY", "Specify an API key.") do |api_key|
-      options[:api_key] = api_key
+      options["api_key"] = api_key
     end
 
     # receive status updates
@@ -33,7 +30,7 @@ begin
 
   optparse.parse!
   
-  raise OptionParser::MissingArgument if options[:api_key].nil?
+  raise OptionParser::MissingArgument if options["api_key"].nil?
 
   require "sinatra"
   require "webrick/https"

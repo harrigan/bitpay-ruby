@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "bitpay-ruby"
 
   s.files         = `git ls-files`.split("\n")
-  s.files         += Dir['ext/java/jar/**/*.jar']
   s.test_files    = `git ls-files -- spec}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["config", "lib"]
@@ -24,11 +23,4 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "sinatra", "~> 1.3.3"
   s.add_runtime_dependency "webrick", "~> 1.3.1"
   s.add_development_dependency "rake", "~> 10.0.0"
-  case RUBY_PLATFORM.downcase
-  when "java"
-  else
-    case RUBY_PLATFORM.downcase
-    when "darwin"
-    end
-  end
 end

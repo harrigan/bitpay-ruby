@@ -23,6 +23,5 @@ module BitPayRuby
 end
 
 require File.join File.dirname(__FILE__), "bitpay-ruby", "version"
-require File.join File.dirname(__FILE__), "bitpay-ruby", "logging"
 
 require File.join File.dirname(__FILE__), "bitpay-ruby", "invoice"

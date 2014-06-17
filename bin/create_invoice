@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-require "bundler"
-Bundler.require :default
-
 require File.dirname(__FILE__) + "/../lib/bitpay-ruby"
 
 BitPayRuby::config = YAML.load_file(File.dirname(__FILE__) + "/../config/bitpay-ruby.yml")
@@ -16,17 +13,17 @@ begin
 
     # specify an API key
     opts.on("-a", "--api-key API_KEY", "Specify an API key.") do |api_key|
-      options[:api_key] = api_key
+      options["api_key"] = api_key
     end
 
     # specfy a price
     opts.on("-p", "--price PRICE", "Specify a price.") do |price|
-      options[:price] = price.to_f
+      options["price"] = price.to_f
     end
 
     # specify a currency
     opts.on("-c", "--currency CURRENCY", "Specify a currency.") do |currency|
-      options[:currency] = currency
+      options["currency"] = currency
     end
 
     # help
@@ -38,12 +35,12 @@ begin
 
   optparse.parse!
   
-  raise OptionParser::MissingArgument if options[:api_key].nil?
-  raise OptionParser::MissingArgument if options[:price].nil?
-  raise OptionParser::MissingArgument if options[:currency].nil?
+  raise OptionParser::MissingArgument if options["api_key"].nil?
+  raise OptionParser::MissingArgument if options["price"].nil?
+  raise OptionParser::MissingArgument if options["currency"].nil?
   
-  BitPayRuby::config["api_key"] = options[:api_key]
-  invoice = BitPayRuby::Invoice.new(options[:price], options[:currency])
+  BitPayRuby::config["api_key"] = options["api_key"]
+  invoice = BitPayRuby::Invoice.new(options["price"], options["currency"])
   invoice.create
   $stdout.puts invoice.to_s
 rescue BitPayRuby::BitPayRubyError => e
